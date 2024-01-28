@@ -6,3 +6,6 @@ const value ={
 
 const token = jwt.sign(value, "secret")
 console.log(token)
+
+//const token = jwt.verify("token", "secret")
+
