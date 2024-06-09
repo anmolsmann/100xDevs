@@ -38,7 +38,7 @@ runAfterOneSec(function(){
     console.log("Hello!")
 }) */
 
-interface user{
+/* interface user{
     firstName: string,
     lastName: string,
     age: number,
@@ -60,4 +60,41 @@ const value = isLegal({
     age: 21
 })
 
+console.log(value) */
+
+//interfaces can be implented as classes, the popular difference between types and interfaces
+
+/* type employee = {
+    name: string,
+    startDate: Date
+}
+
+//types let you do unions, intersections etc
+
+type manager = {
+    name: string,
+    department: string
+}
+
+type techlead = employee & manager
+const t: techlead = {
+    name: "Anmol",
+    startDate: new Date(),
+    department: "Tech"
+} */
+
+//arrays in typescript
+
+type numArr = number[];
+function maxvalue(arr: numArr){
+    let max=0;
+    for(let i=0; i<arr.length; i++){
+        if(arr[i]>max){
+            max = arr[i]
+        }
+    }
+    return max
+}
+
+const value = maxvalue([1,2,3])
 console.log(value)
