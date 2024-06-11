@@ -1,6 +1,9 @@
 //const x:number =1
 //console.log(x)
 
+import { disposeEmitNodes } from "typescript";
+import { string } from "zod";
+
 //number, string , boolean, null, undefined, any
 
 /* function greet(firstName:string){
@@ -85,7 +88,7 @@ const t: techlead = {
 
 //arrays in typescript
 
-type numArr = number[];
+/* type numArr = number[];
 function maxvalue(arr: numArr){
     let max=0;
     for(let i=0; i<arr.length; i++){
@@ -97,4 +100,40 @@ function maxvalue(arr: numArr){
 }
 
 const value = maxvalue([1,2,3])
-console.log(value)
+console.log(value) */
+
+//named constants - enums
+enum direction{
+    up,
+    down, 
+    right,
+    left
+}
+
+function doSomething(keypressed: direction){
+    if(keypressed == direction.up){
+        console.log("up")
+    }
+}
+
+doSomething(direction.up);
+console.log(direction.up)
+console.log(direction.left)
+
+//generics in typescript
+//problem#1 : user can send two sorts of inputs
+type input = number | string
+
+function firstElement(arr: input[]){
+    return arr[0]
+}
+
+const value =firstElement(['Anmol', 'Singh'])
+
+//solving this problem using generics
+function identity<T>(arg: T):T{
+    return arg
+}
+
+let output1 = identity<string>("myString")
+let output2 = identity<number>(100)
