@@ -3,6 +3,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { decode, verify } from "hono/jwt";
 import { number } from "zod";
+import {signupInput} from "@anmolsmann/commonmod"
 
 export  const blogRouter = new Hono<{
     Bindings: {
@@ -15,16 +16,23 @@ export  const blogRouter = new Hono<{
 
 blogRouter.use("/*", async (c, next) => {
     const authHeader = c.req.header("authorization") || ""
-    const user = await verify(authHeader, c.env.JWT_SECRET)
-    
-    if(user){
-        c.set("userId", user.id)
-        await next()
-    }else{
-        c.status(403)
-        return c.json({
-            message: "You are not logged in"
-        })
+
+    try{
+        const user = await verify(authHeader, c.env.JWT_SECRET)
+        if(user){
+            c.set("userId", user.id)
+            await next()
+        }else{
+            c.status(403)
+            return c.json({
+                message: "You are not logged in"
+            })
+        }
+    }catch(e){
+            c.status(403)
+            return c.json({
+                message: "You are not logged in"
+            })
     }
 });
 
@@ -69,6 +77,19 @@ blogRouter.put('/', async(c) => {
     })
 })
 
+blogRouter.get('/bulk', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const blogs = await prisma.blog.findMany();
+
+    return c.json({
+        blogs
+    })
+
+})
+
 blogRouter.get('/:id', async (c) => {
     const id =  c.req.param("id");
 	const prisma = new PrismaClient({
@@ -91,17 +112,4 @@ blogRouter.get('/:id', async (c) => {
                 message: "Error"
             })
     }
-})
-
-blogRouter.get('/bulk', (c) => {
-    const prisma = new PrismaClient({
-		datasourceUrl: c.env.DATABASE_URL,
-	}).$extends(withAccelerate());
-
-    const blogs = prisma.blog.findMany()
-
-    return c.json({
-        blogs
-    })
-
 })
